@@ -1,0 +1,17 @@
+[user]
+  name = mhag
+  email = hagihar@gmail.com
+[color]
+  status = auto
+  diff = auto
+  branche = auto
+  interactive = auto
+  grep = auto
+[alias]
+  st = status
+  co = checkout
+  ci = commit -a
+  up = pull --rebase
+[core]
+  excludesfile = ~/.gitignore
+
