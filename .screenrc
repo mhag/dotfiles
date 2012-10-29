@@ -16,13 +16,9 @@ startup_message off
 autodetach on
 
 # ログを設定
-logfile "/home/hagihara/log/screen-%Y%m%d-%n.log"
+logfile "/home/mhag/log/screen-%Y%m%d-%n.log"
 log on
 deflog on
-
-# スクリーンセーバー
-#idle 1200
-#blankerprg /usr/games/fortune
 
 # bind 設定
 bind w windowlist -b
