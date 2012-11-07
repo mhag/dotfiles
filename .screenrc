@@ -16,9 +16,9 @@ startup_message off
 autodetach on
 
 # ログを設定
-logfile "/home/mhag/log/screen-%Y%m%d-%n.log"
-log on
-deflog on
+#logfile "/home/mhag/log/screen-%Y%m%d-%n.log"
+#log on
+#deflog on
 
 # bind 設定
 bind w windowlist -b
