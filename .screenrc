@@ -29,7 +29,8 @@ bind -c REGION o focus
 bind -c REGION ^ resize
 bind l command -c REGION
 
-scrollback 65535
+#scrollback 65535
+defscrollback 65535
 
 # 不明
 shell -$SHELL
