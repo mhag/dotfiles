@@ -273,6 +273,8 @@ if [ "$TERM" = "screen" ]; then
         chpwd
 fi
 
+. ~/local/bin/z/z.sh
+
 case "${OSTYPE}" in
 darwin*)
     alias ls='ls -G'
