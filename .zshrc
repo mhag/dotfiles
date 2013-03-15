@@ -10,6 +10,10 @@ PROMPT='%{^39m%}%U$USER%{@^33m%}%m%{::^32m%}%~%%^m%}%u'
 zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
                              /usr/sbin /usr/bin /sbin /bin /usr/X11R6/bin
 
+## 補完時に大小文字を区別しない
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+zstyle ':completion:*' menu select=1
+
 #=============================================================#
 if [ -f /sw/bin/init.sh ]; then
   source /sw/bin/init.sh
@@ -28,7 +32,7 @@ setopt append_history
 setopt extended_history
 
 # 直前と同じコマンドラインはヒストリに追加しない
-setopt hist_ignore_dups
+setopt hist_ignore_all_dups
 
 # コマンドラインの先頭がスペースで始まる場合ヒストリに追加しない
 setopt hist_ignore_space
