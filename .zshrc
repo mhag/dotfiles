@@ -7,6 +7,16 @@ alias su='sudo su -s /bin/zsh'
 HISTSIZE=5000
 PROMPT='%{^39m%}%U$USER%{@^33m%}%m%{::^32m%}%~%%^m%}%u'
 
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' formats '(%s)-[%b]'
+zstyle ':vcs_info:*' actionformats '(%s)-[%b|%a]'
+precmd () {
+    psvar=()
+    LANG=en_US.UTF-8 vcs_info
+    [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+}
+RPROMPT="%1(v|%F{green}%1v%f|)"
+
 zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
                              /usr/sbin /usr/bin /sbin /bin /usr/X11R6/bin
 
@@ -283,6 +293,7 @@ case "${OSTYPE}" in
 darwin*)
     alias ls='ls -G'
     eval "$(rbenv init -)"
+    export JAVA_HOME=`/usr/libexec/java_home`
     ;;  
 cygwin*)
     alias ls='ls --color=auto'
@@ -295,3 +306,4 @@ linux*)
     alias be='bundle exec'
     ;;
 esac
+
