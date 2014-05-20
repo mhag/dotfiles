@@ -8,10 +8,14 @@
   interactive = auto
   grep = auto
 [alias]
-  st = status
+  st = status --branch --short
   co = checkout
   ci = commit -a
   up = pull --rebase
 [core]
   excludesfile = ~/.gitignore
 
+[credential]
+  helper = osxkeychain
+[http]
+  postBuffer = 104857600
