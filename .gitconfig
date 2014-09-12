@@ -9,9 +9,6 @@
   grep = auto
 [alias]
   st = status --branch --short
-  co = checkout
-  ci = commit -a
-  up = pull --rebase
 [core]
   excludesfile = ~/.gitignore
 
