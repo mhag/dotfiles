@@ -159,13 +159,6 @@ unsetopt promptcr
 #コピペの時rpromptを非表示する
 setopt transient_rprompt
 
-# cd -[tab] でpushd
-#setopt autopushd
-
-# keychainの設定
-# keychain ~/.ssh/id_rsa
-# . ~/.keychain/$HOSTNAME-sh
-
 # スクリーン上から補完する。Ctrl + o
 HARDCOPYFILE=$HOME/tmp/screen-hardcopy
 touch $HARDCOPYFILE
@@ -242,7 +235,6 @@ function peco-select-history() {
     zle clear-screen
 }
 zle -N peco-select-history
-
 bindkey '^r' peco-select-history
 
 function peco-cdr () {
