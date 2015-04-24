@@ -4,8 +4,7 @@ export HOSTNAME=hostname
 
 alias su='sudo su -s /bin/zsh'
 
-HISTSIZE=5000
-PROMPT='%{^39m%}%U$USER%{@^33m%}%m%{::^32m%}%~%%^m%}%u'
+autoload -Uz zmv
 
 autoload -Uz vcs_info
 zstyle ':vcs_info:*' formats '(%s)-[%b]'
@@ -17,16 +16,6 @@ precmd () {
 }
 RPROMPT="%1(v|%F{green}%1v%f|)"
 
-autoload -Uz is-at-least
-if is-at-least 4.3.11
-then
-  autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
-  add-zsh-hook chpwd chpwd_recent_dirs
-  zstyle ':chpwd:*' recent-dirs-max 5000
-  zstyle ':chpwd:*' recent-dirs-default yes
-  zstyle ':completion:*' recent-dirs-insert both
-fi
-
 zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
                              /usr/sbin /usr/bin /sbin /bin /usr/X11R6/bin
 
@@ -34,12 +23,6 @@ zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 zstyle ':completion:*' menu select=1
 
-#=============================================================#
-if [ -f /sw/bin/init.sh ]; then
-  source /sw/bin/init.sh
-fi
-
-#=============================================================#
 # 履歴
 HISTFILE=~/.zsh-history
 HISTSIZE=1000000
@@ -65,9 +48,6 @@ setopt hist_no_store
 
 # ヒストリを呼び出してから実行する間に一旦編集できる状態になる
 setopt hist_verify
-
-#=============================================================#
-
 
 # 補完候補が複数ある時に、一覧表示する
 setopt auto_list
@@ -120,25 +100,35 @@ setopt print_eightbit
 # for, repeat, select, if, function などで簡略文法が使えるようになる
 setopt short_loops
 
-#
-# set prompt
-#
-case ${UID} in
-0)
-    PROMPT="%B%{[31m%}%/#%{[m%}%b "
-    PROMPT2="%B%{[31m%}%_#%{[m%}%b "
-    SPROMPT="%B%{[31m%}%r is correct? [n,y,a,e]:%{[m%}%b "
-    [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
-        PROMPT="%{[37m%}${HOST%%.*} ${PROMPT}"
-    ;;
-*)
-    PROMPT="%{[31m%}%/%%%{[m%} "
-    PROMPT2="%{[31m%}%_%%%{[m%} "
-    SPROMPT="%{[31m%}%r is correct? [n,y,a,e]:%{[m%} "
-    [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
-        PROMPT="%{[37m%}${HOST%%.*} ${PROMPT}"
-    ;;
-esac
+# 色設定
+autoload -U colors; colors
+
+# もしかして機能
+setopt correct
+
+# PCRE 互換の正規表現を使う
+setopt re_match_pcre
+
+# プロンプトが表示されるたびにプロンプト文字列を評価、置換する
+setopt prompt_subst
+
+set_prompt() {
+  local face
+  face=$1
+  if [ "$SSH_CLIENT" ]; then
+    PROMPT="%B%{$fg[green]%}%m %~ %{%(?.$fg[cyan].$fg[red])%}$face%{$reset_color%}%b "
+  else
+    PROMPT="%B%{$fg[green]%}%~ %{%(?.$fg[cyan].$fg[red])%}$face%{$reset_color%}%b "
+  fi
+  if [ "_$SORAH_COMPACT" = "_1" ]; then
+    PROMPT="%{%(?.$fg[cyan].$fg[red])%}$face%{$reset_color%}%b "
+  fi
+}
+set_prompt "%(?.(▰╹◡╹%).ヾ(｡>﹏<｡%)ﾉﾞ)"
+
+PROMPT2='%B%_%(?.%f.%S%F)%b %#%f%s '
+SPROMPT="%r is correct? [n,y,a,e]: "
+
 
 # set terminal title including current directory
 #
@@ -149,9 +139,6 @@ kterm*|xterm)
     }
     ;;
 esac
-
-# 色を使う
-setopt prompt_subst
 
 # 文字列末尾に改行コードが無い場合でも表示する
 unsetopt promptcr
@@ -263,17 +250,14 @@ function peco-dfind() {
 zle -N peco-dfind
 bindkey '^x^d' peco-dfind
 
-case "${OSTYPE}" in
-darwin*)
-    alias ls='ls -G'
-    eval "$(rbenv init -)"
-    export JAVA_HOME=`/usr/libexec/java_home`
-    ;;  
-linux*)
-    alias ls='ls --color=auto'
-    export PATH="$HOME/.rbenv/bin:$PATH"
-    eval "$(rbenv init -)"
-    alias be='bundle exec'
-    ;;
-esac
+function peco-ssh() {
+  SSH=$(grep "^\s*Host " ~/.ssh/config | sed s/"[\s ]*Host "// | grep -v "\*" | sort | peco)
+  ssh $SSH
+}
+alias pssh="peco-ssh"
+
+alias ls='ls -G'
+eval "$(rbenv init -)"
+export JAVA_HOME=`/usr/libexec/java_home`
+source /usr/local/share/zsh/site-functions/_aws
 
