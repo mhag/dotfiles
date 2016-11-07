@@ -232,3 +232,5 @@ source /usr/local/share/zsh/site-functions/_aws
 export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$PATH
 
+export PATH=$PATH:/usr/local/share/git-core/contrib/diff-highlight
+
