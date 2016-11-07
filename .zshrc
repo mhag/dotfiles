@@ -224,38 +224,6 @@ function peco-select-history() {
 zle -N peco-select-history
 bindkey '^r' peco-select-history
 
-function peco-cdr () {
-    local selected_dir=$(cdr -l | awk '{ print $2 }' | peco)
-    if [ -n "$selected_dir" ]; then
-        BUFFER="cd ${selected_dir}"
-        zle accept-line
-    fi
-    zle clear-screen
-}
-zle -N peco-cdr
-bindkey '^x^r' peco-cdr
-
-function peco-dfind() {
-    local current_buffer=$BUFFER
-    # .git系など不可視フォルダは除外
-    local selected_dir="$(find . -maxdepth 5 -type d ! -path "*/.*"| peco)"
-    if [ -d "$selected_dir" ]; then
-        BUFFER="${current_buffer} \"${selected_dir}\""
-        CURSOR=$#BUFFER
-        # ↓決定時にそのまま実行するなら
-        #zle accept-line
-    fi
-    zle clear-screen
-}
-zle -N peco-dfind
-bindkey '^x^d' peco-dfind
-
-function peco-ssh() {
-  SSH=$(grep "^\s*Host " ~/.ssh/config | sed s/"[\s ]*Host "// | grep -v "\*" | sort | peco)
-  ssh $SSH
-}
-alias pssh="peco-ssh"
-
 alias ls='ls -G'
 eval "$(rbenv init -)"
 export JAVA_HOME=`/usr/libexec/java_home`
