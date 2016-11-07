@@ -229,3 +229,6 @@ eval "$(rbenv init -)"
 export JAVA_HOME=`/usr/libexec/java_home`
 source /usr/local/share/zsh/site-functions/_aws
 
+export GOPATH=$HOME/go
+export PATH=$GOPATH/bin:$PATH
+
